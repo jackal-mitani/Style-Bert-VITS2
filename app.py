@@ -60,5 +60,5 @@ app.launch(
     server_name=args.host,
     server_port=args.port,
     inbrowser=not args.no_autolaunch,
-    share=args.share,
+    share=True,
 )
