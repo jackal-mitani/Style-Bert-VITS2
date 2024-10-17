@@ -29,11 +29,6 @@ from style_bert_vits2.tts_model import TTSModelHolder
 ## pyopenjtalk_worker は TCP ソケットサーバーのため、ここで起動する
 pyopenjtalk.initialize_worker()
 
-# Web UI での学習時の無駄な GPU VRAM 消費を避けるため、あえてここでは BERT モデルの事前ロードを行わない
-# データセットの BERT 特徴量は事前に bert_gen.py により抽出されているため、学習時に BERT モデルをロードしておく必要はない
-# BERT モデルの事前ロードは「ロード」ボタン押下時に実行される TTSModelHolder.get_model_for_gradio() 内で行われる
-# Web UI での学習時、音声合成タブの「ロード」ボタンを押さなければ、BERT モデルが VRAM にロードされていない状態で学習を開始できる
-
 languages = [lang.value for lang in Languages]
 
 initial_text = "こんにちは、初めまして。あなたの名前はなんていうの？"
@@ -159,7 +154,7 @@ Style-Bert-VITS2を用いる際は、以下のお願いを守っていただけ�
 
 how_to_md = """
 下のように`model_assets`ディレクトリの中にモデルファイルたちを置いてください。
-```
+
 model_assets
 ├── your_model
 │   ├── config.json
@@ -186,21 +181,17 @@ style_md = f"""
 - 音声ファイルを入力する場合は、学習データと似た声音の話者（特に同じ性別）でないとよい効果が出ないかもしれません。
 """
 
-
 def make_interactive():
     return gr.update(interactive=True, value="音声合成")
 
-
 def make_non_interactive():
     return gr.update(interactive=False, value="音声合成（モデルをロードしてください）")
-
 
 def gr_util(item):
     if item == "プリセットから選ぶ":
         return (gr.update(visible=True), gr.Audio(visible=False, value=None))
     else:
         return (gr.update(visible=False), gr.update(visible=True))
-
 
 def create_inference_app(model_holder: TTSModelHolder) -> gr.Blocks:
     def tts_fn(
@@ -505,6 +496,7 @@ def create_inference_app(model_holder: TTSModelHolder) -> gr.Blocks:
 
         model_path.change(make_non_interactive, outputs=[tts_button])
 
+        # **リフレッシュボタンの処理**
         refresh_button.click(
             model_holder.update_model_names_for_gradio,
             outputs=[model_name, model_path, tts_button],
