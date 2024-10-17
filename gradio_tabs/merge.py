@@ -856,7 +856,7 @@ initial_md = """
     - 他にも何らかの活用法があるかもしれない
 - ヌルモデルの加算 `new = A + weight * B`: AとBのモデルを指定して、Bのモデルに要素ごとに比率をかけたものをAに足す
     - Bのモデルは重み付き和などで `C - D` などとして作っている場合を想定している
-    - 他にも何らかの活用法があるかもしれない
+    - 他にも何らかの活用法があるかもしれません。
 
 
 ### マージの手順
@@ -1174,17 +1174,9 @@ def create_merge_app(model_holder: TTSModelHolder) -> gr.Blocks:
                 return "_".join(args)
 
             @gr.render(
-                inputs=[
-                    style_count,
-                    style_a_list,
-                    style_b_list,
-                    style_c_list,
-                    method,
-                ]
+                inputs=[style_count, style_a_list, style_b_list, style_c_list, method]
             )
-            def render_style(
-                style_count, style_a_list, style_b_list, style_c_list, method
-            ):
+            def render_style(style_count, style_a_list, style_b_list, style_c_list, method):
                 a_components = []
                 b_components = []
                 c_components = []
@@ -1213,14 +1205,10 @@ def create_merge_app(model_holder: TTSModelHolder) -> gr.Blocks:
                                 interactive=i != 0,
                             )
                             style_a.change(
-                                join_names,
-                                inputs=[style_a, style_b],
-                                outputs=[style_out],
+                                join_names, inputs=[style_a, style_b], outputs=[style_out]
                             )
                             style_b.change(
-                                join_names,
-                                inputs=[style_a, style_b],
-                                outputs=[style_out],
+                                join_names, inputs=[style_a, style_b], outputs=[style_out]
                             )
                         a_components.append(style_a)
                         b_components.append(style_b)
@@ -1230,9 +1218,7 @@ def create_merge_app(model_holder: TTSModelHolder) -> gr.Blocks:
                         def _merge_usual(data):
                             style_tuple_list = [
                                 (data[a], data[b], data[out])
-                                for a, b, out in zip(
-                                    a_components, b_components, out_components
-                                )
+                                for a, b, out in zip(a_components, b_components, out_components)
                             ]
                             return merge_style_usual_gr(
                                 data[model_name_a],
@@ -1248,12 +1234,7 @@ def create_merge_app(model_holder: TTSModelHolder) -> gr.Blocks:
                                 a_components
                                 + b_components
                                 + out_components
-                                + [
-                                    model_name_a,
-                                    model_name_b,
-                                    speech_style_slider,
-                                    new_name,
-                                ]
+                                + [model_name_a, model_name_b, speech_style_slider, new_name]
                             ),
                             outputs=[info_style_merge, style],
                         )
@@ -1263,9 +1244,7 @@ def create_merge_app(model_holder: TTSModelHolder) -> gr.Blocks:
                             print("Method is add_null")
                             style_tuple_list = [
                                 (data[a], data[b], data[out])
-                                for a, b, out in zip(
-                                    a_components, b_components, out_components
-                                )
+                                for a, b, out in zip(a_components, b_components, out_components)
                             ]
                             return merge_style_add_null_gr(
                                 data[model_name_a],
@@ -1281,12 +1260,7 @@ def create_merge_app(model_holder: TTSModelHolder) -> gr.Blocks:
                                 a_components
                                 + b_components
                                 + out_components
-                                + [
-                                    model_name_a,
-                                    model_name_b,
-                                    speech_style_slider,
-                                    new_name,
-                                ]
+                                + [model_name_a, model_name_b, speech_style_slider, new_name]
                             ),
                             outputs=[info_style_merge, style],
                         )
@@ -1347,10 +1321,7 @@ def create_merge_app(model_holder: TTSModelHolder) -> gr.Blocks:
                             style_tuple_list = [
                                 (data[a], data[b], data[c], data[out])
                                 for a, b, c, out in zip(
-                                    a_components,
-                                    b_components,
-                                    c_components,
-                                    out_components,
+                                    a_components, b_components, c_components, out_components
                                 )
                             ]
                             return merge_style_add_diff_gr(
@@ -1385,10 +1356,7 @@ def create_merge_app(model_holder: TTSModelHolder) -> gr.Blocks:
                             style_tuple_list = [
                                 (data[a], data[b], data[c], data[out])
                                 for a, b, c, out in zip(
-                                    a_components,
-                                    b_components,
-                                    c_components,
-                                    out_components,
+                                    a_components, b_components, c_components, out_components
                                 )
                             ]
                             return merge_style_weighted_sum_gr(
@@ -1426,14 +1394,10 @@ def create_merge_app(model_holder: TTSModelHolder) -> gr.Blocks:
                 add_btn = gr.Button("スタイルを増やす")
                 del_btn = gr.Button("スタイルを減らす")
             add_btn.click(
-                lambda x: x + 1,
-                inputs=[style_count],
-                outputs=[style_count],
+                lambda x: x + 1, inputs=[style_count], outputs=[style_count]
             )
             del_btn.click(
-                lambda x: x - 1 if x > 1 else 1,
-                inputs=[style_count],
-                outputs=[style_count],
+                lambda x: x - 1 if x > 1 else 1, inputs=[style_count], outputs=[style_count]
             )
             style_merge_btn = gr.Button("スタイルのマージ", variant="primary")
 
